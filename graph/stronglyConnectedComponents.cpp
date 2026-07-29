@@ -1,5 +1,5 @@
 const int INF {1'000'000'000};
-std::vector<int> low(n), pre(n), id(n, 1-);
+std::vector<int> low(n), pre(n), id(n, -1);
 std::stack<int> stk{};
 int cont{}, numSCC{};
 

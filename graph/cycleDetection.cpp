@@ -2,7 +2,6 @@
 
 enum Colors {none, explored, visited};
 std::vector<int> vis(n);
-
 auto hasCycle = [&](auto& self, int node) -> bool {
     vis[node] = explored;
     for (auto u : adj[node]) {
@@ -21,7 +20,6 @@ for (int i{}; i < n; ++i) {
         q.push_back(i);
     }
 }
-
 for (int j{}; j < std::ssize(q); ++j) {
     auto node {q[j]};
     for (auto u : adj[node]) {
@@ -31,7 +29,6 @@ for (int j{}; j < std::ssize(q); ++j) {
         }
     }
 }
-
 if (std::ssize(q) != n) {
     std::cout << "There is a cycle.\n";
 }
