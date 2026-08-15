@@ -1,25 +1,40 @@
-#include <bits/stdc++.h>
+vector<long long> prefix_function(string s){
+    long long n= (int)s.size();
+    vector<long long> pi(n);
 
-auto kmp = [](std::string_view s, std::string_view p) {
-    int n{std::ssize(s)}, m{std::ssize(p)};
-    std::vector<int> b(m + 1);
-    int i{}, j{-1};
-    b[0] = -1;
-    while (i < m) {
-        while ((j >= 0) && (p[i] != p[j])) j = b[j];
-        ++i; ++j;
-        b[i] = j;
+    for(int i = 1; i<n; i++){
+        long long j=pi[i-1];
+
+        while(j>0 && s[i]!=s[j])
+            j=pi[j-1];
+
+        if(s[i]==s[j])
+            j++;
+
+        pi[i]=j;
     }
 
-    std::vector<int> ans;
-    i = 0; j = 0;
-    while (i < n) {
-        while ((j >= 0) && (s[i] != p[j])) j = b[j];
-        ++i; ++j;
-        if (j == m) {
-            ans.push_back(i - m);
-            j = b[j];
+    return pi;
+}
+
+vector<long long> kmp(string s,string pat){
+    vector<long long> pi=prefix_function(pat);
+    vector<long long> ans;
+
+    long long j=0;
+
+    for(int i = 0; i< (int)s.size(); i++){
+        while(j>0 && s[i]!=pat[j])
+            j=pi[j-1];
+
+        if(s[i]==pat[j])
+            j++;
+
+        if(j==sz(pat)){
+            ans.pb(i-sz(pat)+1);
+            j=pi[j-1];
         }
     }
+
     return ans;
-};
+}
