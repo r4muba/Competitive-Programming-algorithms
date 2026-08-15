@@ -29,8 +29,8 @@ private:
         tree[node] = operation(tree[left(node)], tree[right(node)]);
     }
     void increment(int node, int l, int r, int leftQuery, int rightQuery, T delta) {
-        if (r < leftQuery || rightQuery < l) return;
         propagate(node, l, r);
+        if (r < leftQuery || rightQuery < l) return;
         if (leftQuery <= l && r <= rightQuery) {
             lazy[node] += delta;
             propagate(node, l, r);
