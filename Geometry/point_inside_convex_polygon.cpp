@@ -1,3 +1,5 @@
+//Este codigo asume orden antihorario
+
 int sgn(ll val) { return val > 0 ? 1 : (val == 0 ? 0 : -1); }
 
 bool pointInTriangle(Point a, Point b, Point c, Point point){
@@ -29,6 +31,11 @@ bool pointInConvexPolygon(Point point, int &n, vector<Point> &seq, Point &transl
 	if (seq[0]*point != 0 && sgn(seq[0]*point) != sgn(seq[0]*seq[n-1])) return false;
 	if (seq[n - 1]*point != 0 && sgn(seq[n - 1]*point) != sgn(seq[n - 1]*seq[0])) return false;
 	if (seq[0]*point == 0) return seq[0].dot(seq[0]) >= point.dot(point);
+    /*
+    Si no acepta puntos en el borde remplaza linea anteriror con
+    if (seq[0] * point == 0) return false;
+    if (seq[n - 1] * point == 0) return false;    
+    */
 	int l = 0, r = n - 1;
 	while (r - l > 1) {
 		int mid = (l + r) / 2;
@@ -38,6 +45,10 @@ bool pointInConvexPolygon(Point point, int &n, vector<Point> &seq, Point &transl
 	}
 	int pos = l;
 	return pointInTriangle(seq[pos], seq[pos + 1], Point{0,0}, point);
+    /*
+    Mismo caso que no acepte cosas en el borde (Strictly inside)
+    return (seq[pos + 1] - seq[pos]) * (point - seq[pos]) > 0;
+    */
 }
 
 void doit(){
