@@ -49,6 +49,7 @@ CODE_BG = colors.HexColor("#F5F7FA")
 GUTTER_BG = colors.HexColor("#E9EEF4")
 
 DEFAULT_EXTENSIONS = (".cpp", ".h", ".hpp", ".cc", ".cxx", ".c")
+CODE_WRAP_COLUMNS = 108
 IGNORED_DIRECTORIES = {
     ".git",
     ".github",
@@ -250,6 +251,39 @@ def highlight_cpp_line(line: str, in_block_comment: bool) -> tuple[str, bool]:
         index += 1
 
     return "".join(result) or " ", in_block_comment
+
+
+def wrap_code_line(line: str, width: int = CODE_WRAP_COLUMNS) -> list[str]:
+    """Divide visualmente una linea larga sin modificar el archivo fuente."""
+
+    if len(line) <= width:
+        return [line]
+
+    indentation = line[: len(line) - len(line.lstrip())]
+    remaining = line[len(indentation) :]
+    continuation = indentation + "    "
+    wrapped: list[str] = []
+    prefix = indentation
+
+    while remaining:
+        available = max(24, width - len(prefix))
+        if len(remaining) <= available:
+            wrapped.append(prefix + remaining)
+            break
+
+        window = remaining[:available]
+        candidates = [window.rfind(char) for char in " \t,;)]}+-*/&|<>=?"]
+        cut = max(candidates) + 1
+        # Evita crear fragmentos diminutos cuando no hay un corte natural cercano.
+        if cut < max(24, int(available * 0.58)):
+            cut = available
+
+        fragment = remaining[:cut].rstrip()
+        wrapped.append(prefix + fragment)
+        remaining = remaining[cut:].lstrip()
+        prefix = continuation
+
+    return wrapped or [""]
 
 
 def make_styles():
@@ -472,11 +506,14 @@ def code_table(algorithm: Algorithm, styles: dict) -> LongTable:
     rows = [header]
     in_block_comment = False
     for number, source_line in enumerate(algorithm.lines, start=1):
-        markup, in_block_comment = highlight_cpp_line(source_line.expandtabs(4), in_block_comment)
+        visual_lines = []
+        for visual_line in wrap_code_line(source_line.expandtabs(4)):
+            markup, in_block_comment = highlight_cpp_line(visual_line, in_block_comment)
+            visual_lines.append(markup)
         rows.append(
             [
                 Paragraph(str(number), styles["line_number"]),
-                XPreformatted(markup, styles["code"]),
+                XPreformatted("\n".join(visual_lines), styles["code"]),
             ]
         )
 
