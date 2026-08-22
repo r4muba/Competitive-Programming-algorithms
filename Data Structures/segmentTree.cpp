@@ -4,7 +4,7 @@ class SegmentTree {
     using T = int;
 public:
     SegmentTree (const std::vector<T>& a) 
-        : n{std::ssize(a)}, tree(n * 4, kdefault), lazy(n * 4, klazy) {
+        : n{static_cast<int>(a.size())}, tree(n * 4, kdefault), lazy(n * 4, klazy) {
             build(0, 0, n - 1, a);
         }
     void increment (int l, int r, T delta);
@@ -14,7 +14,7 @@ private:
     const T kdefault{}, klazy{};
     std::vector<T> tree{}, lazy{};
 
-    T operation (T a, T b) { return std::max(a, b); }
+    T agg (T a, T b) { return std::max(a, b); }
     int left  (int node)     { return (node << 1) + 1; }
     int right (int node)     { return (node << 1) + 2; }
     int mid   (int a, int b) { return (a + b) / 2; }
@@ -26,27 +26,27 @@ private:
         }
         build(left(node), l, mid(l, r), a);
         build(right(node), mid(l , r) + 1, r, a);
-        tree[node] = operation(tree[left(node)], tree[right(node)]);
+        tree[node] = agg(tree[left(node)], tree[right(node)]);
     }
-    void increment(int node, int l, int r, int leftQuery, int rightQuery, T delta) {
+    void increment(int node, int l, int r, int leftq, int rightq, T delta) {
         propagate(node, l, r);
-        if (r < leftQuery || rightQuery < l) return;
-        if (leftQuery <= l && r <= rightQuery) {
+        if (r < leftq || rightq < l) return;
+        if (leftq <= l && r <= rightq) {
             lazy[node] += delta;
             propagate(node, l, r);
             return;
         }
-        increment(left(node), l, mid(l, r),      leftQuery, rightQuery, delta);
-        increment(right(node), mid(l, r) + 1, r, leftQuery, rightQuery, delta);
-        tree[node] = operation(tree[left(node)], tree[right(node)]);
+        increment(left(node), l, mid(l, r),      leftq, rightq, delta);
+        increment(right(node), mid(l, r) + 1, r, leftq, rightq, delta);
+        tree[node] = agg(tree[left(node)], tree[right(node)]);
     }
-    T query(int node, int l, int r, int leftQuery, int rightQuery) {
-        if (r < leftQuery || rightQuery < l) return kdefault;
+    T query(int node, int l, int r, int leftq, int rightq) {
+        if (r < leftq || rightq < l) return kdefault;
         propagate(node, l, r);
-        if (leftQuery <= l && r <= rightQuery) return tree[node];
-        return operation ( 
-            query(left(node), l, mid(l, r), leftQuery, rightQuery),
-            query(right(node), mid(l, r) + 1, r, leftQuery, rightQuery)
+        if (leftq <= l && r <= rightq) return tree[node];
+        return agg ( 
+            query(left(node), l, mid(l, r),      leftq, rightq),
+            query(right(node), mid(l, r) + 1, r, leftq, rightq)
         );
     }
     void propagate (int node, int l, int r) { 
