@@ -17,7 +17,7 @@ for (int i{}; i < n; ++i) {
     dq.push_back(i);
     if (dq.front() <= i - m) dq.pop_front();
 
-    if (i > m) {
+    if (i >= m - 1) {
         int max_value {a[dq.front()]};
     }
 }

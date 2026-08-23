@@ -1,7 +1,5 @@
-#include <bits/stdc++.h>
-
 class SegmentTree {
-    using T = int;
+    using T = long long;
 public:
     SegmentTree (const std::vector<T>& a) 
         : n{static_cast<int>(a.size())}, tree(n * 4, kdefault), lazy(n * 4, klazy) {

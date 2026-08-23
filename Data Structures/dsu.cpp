@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-
 class UF {
 public:
     UF (int size) 
