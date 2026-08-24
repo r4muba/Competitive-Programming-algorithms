@@ -115,7 +115,7 @@ std::pair<int,int> lrso(SuffixArray& sa) {
 }
 
 // Count-Distinct-Substrings O(N)
-// counts the total number of idstinct substrings of s
+// counts the total number of distinct substrings of s
 long long cds (SuffixArray& sa) {
     long long n{sa.size() - 1}, ans {(n * (n + 1)) / 2};
     for (auto u : sa.get_lcp()) ans -= u;
@@ -239,3 +239,77 @@ std::vector<int> lrbl(SuffixArray& sa) {
 // i == j ---> n - i (whole suffix, no RMQ).
 // i != j ---> let lo,hi = minmax(rank[i], rank[j]); RMQ(lcp[lo+1..hi]).
 
+
+// Helper function to concatend strings for lcks
+// preprocess the suffix_belongs
+// Return string, ready to SuffixArray
+int offset {105};
+std::vector<int> suffix_belongs{};
+std::vector<int> concatenated_strings (std::vector<std::string>& s) {
+    std::vector<int> a{};
+    suffix_belongs.clear();
+    int maxn{};
+    for (auto& u : s) maxn += std::ssize(u) + 1;
+    a.reserve(maxn);
+    suffix_belongs.reserve(maxn);
+
+    for (int i{}; i < std::ssize(s); ++i) {
+        for (auto c : s[i]) {
+            a.push_back(c + offset);
+            suffix_belongs.push_back(i);
+        }
+        a.push_back(static_cast<char>(1 + i));
+        suffix_belongs.push_back(-1);
+    }
+    return a;
+}
+
+// Longest-Common-Substring-At-Least-K-Different Strings
+// Finding the longest common substring that appears in at least K 
+// different strings out of a given collection of strings.
+// Return the max {length, vector<>{index}}
+// Most of the time should work with integers and offsetthem to a wider range
+// 1->(k + 1) sentinel char, A = (k + 1) -> Z = (k + 1 + 'a')
+std::pair<int, std::vector<int>> lcsk (SuffixArray& sa, int k) {
+    int n {sa.size()};
+    const auto& lcp {sa.get_lcp()};
+    const auto& suffix {sa.get_suffix()};
+
+    std::unordered_map<int, int> f{};
+    int distinct{};
+    std::deque<int> dq{};
+
+   
+    auto addSuffix = [&](int i) {
+        if (i < 0) return;
+        if (f[i]++ == 0) ++distinct;
+    };
+    auto rmSuffix = [&](int i) {
+        if (i < 0) return;
+        if (--f[i] == 0) --distinct;
+    };
+
+     std::pair<int, std::vector<int>> ans{};
+
+    int l{};
+    for (int i{}; i < n; ++i) {
+        addSuffix(suffix_belongs[suffix[i]]);
+        while ((!dq.empty()) && lcp[dq.back()] >= lcp[i]) dq.pop_back();
+        if (i > l) dq.push_back(i);
+
+        while (distinct >= k) {
+            if (!dq.empty()) {
+                int len {lcp[dq.front()]};
+                if (len > ans.first) {
+                    ans = {len, std::vector{suffix[l]}};
+                } else if (len == ans.first && len > 0) {
+                    ans.second.push_back(suffix[l]);
+                }
+            }
+            rmSuffix(suffix_belongs[suffix[l]]);
+            if ((!dq.empty()) && dq.front() == l + 1) dq.pop_front();
+            ++l;
+        }
+    }
+    return ans;
+}
