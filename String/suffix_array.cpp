@@ -1,10 +1,7 @@
-#include<bits/stdc++.h>
-/*
-	TODO: Add info about the functions
-		  Test the lrsso, distinctSubstrings, kthSubstring
-		  Add the rmq () of lcp with sparse_table / segtree
-		  add Longest Common Substring of k strings
-*/
+//TODO:
+//add Longest Common Substring of k strings
+
+// Push back a sentinel static_cast<char>(1);
 class SuffixArray {
 public:
     SuffixArray (std::string_view a)
@@ -76,12 +73,28 @@ private:
     }
 };
 
-int lrss (SuffixArray& a) {
-	const auto& lcp {a.get_lcp()};
-	return *std::max_element(lcp.begin(), lcp.end());
+// Longest-Repeated-Substring O(N)
+// Finds the longest substring of s that occurs at least twice.
+// Returns {length, start_index} of one occurrence (lexicographically smallest).
+// If no substring repeats returns {-1, -1}.
+std::pair<int,int> lrs (SuffixArray& sa) {
+    const auto& lcp {sa.get_lcp()};
+    const auto& suffix {sa.get_suffix()};
+
+    std::pair<int,int> ans{-1, -1};
+    for (int i{}; i < sa.size(); ++i) {
+        if (lcp[i] > ans.first) {
+            ans = {lcp[i], suffix[i]};
+        }
+    }
+    return ans;
 }
 
-std::pair<int,int> lrsso(SuffixArray& sa) {
+// Longest-Repeated-Substring-Occurrence-Count O(N)
+// Finds the longest substring that repeats, and how many times it occurs.
+// Returns {length, occurrence_count} of that substring.
+// If no substring repeats, returns {0, 1} (every substring occurs once).
+std::pair<int,int> lrso(SuffixArray& sa) {
     const auto& lcp{sa.get_lcp()};
     int m{std::ssize(lcp)};
 
@@ -101,11 +114,39 @@ std::pair<int,int> lrsso(SuffixArray& sa) {
     return {L, best_occurrences};
 }
 
-long long distinctSubstrings(SuffixArray& sa) {
-	long long n{sa.size() - 1};
-	long long ans{(n * (n + 1)) / 2};
-	for (int x : sa.get_lcp()) ans -= x;
-	return ans;
+// Count-Distinct-Substrings O(N)
+// counts the total number of idstinct substrings of s
+long long cds (SuffixArray& sa) {
+    long long n{sa.size() - 1}, ans {(n * (n + 1)) / 2};
+    for (auto u : sa.get_lcp()) ans -= u;
+    return ans;
+}
+
+// Count-Distinct-Substrings-Repetead-At-Least-K O(N)
+// Counts the number of distinct substrings of s that occur at least k times.
+long long cdrk (SuffixArray& sa, int k) {
+    const auto& lcp{sa.get_lcp()};
+    int n {std::ssize(lcp)};
+    if (k < 1 || n < k) return 0;
+    if (k == 1) {
+        return cds(sa);
+    }
+
+    std::deque<int> dq{};
+    long long ans{};
+    int x{};
+
+    for (int i{1}; i < n; ++i) {
+        while (!dq.empty() && lcp[dq.back()] >= lcp[i]) dq.pop_back();
+        dq.push_back(i);
+        if (dq.front() <= i - (k - 1)) dq.pop_front();
+        int l{i - (k - 2)};
+        if (l < 1) continue;
+
+        ans += std::max(0, lcp[dq.front()] - x);
+        x = lcp[dq.front()];
+    }
+    return ans;
 }
 
 std::string kthSubstring(long long k, SuffixArray& sa, const std::string& s) {
@@ -119,6 +160,10 @@ std::string kthSubstring(long long k, SuffixArray& sa, const std::string& s) {
     return ""; 
 }
 
+// Longest-Repetead-Substring-At-Least-K O(N)
+// Finds the longestsubstring that occurs at least k time to also recover a start index.
+// Returns {length, start_index} of one valid occurrence — specifically
+// the occurrence with the largest/smallest starting index among all substrings
 std::pair<int,int> lrsk(SuffixArray& a, int k) {
     int n{a.size()};
     int m {k - 1};
@@ -153,6 +198,11 @@ std::pair<int,int> lrsk(SuffixArray& a, int k) {
     return {best, idx};
 }
 
+// Longest-Repetead-Substring-By_Lenght O(N)
+// For EVERY length L (1..n) the maximum number of times
+// any substring of exact length L occurs in s.
+// Returns a vector of size n+1; index L (1..n) holds max occurrences of
+// length-L substrings. 
 std::vector<int> lrbl(SuffixArray& sa) {
     int n {sa.size()};
     const auto& lcp {sa.get_lcp()};
@@ -184,3 +234,8 @@ std::vector<int> lrbl(SuffixArray& sa) {
     }
     return ans;
 }
+
+// LCP(i, j): longest common prefix of suffixes starting at i, j.
+// i == j ---> n - i (whole suffix, no RMQ).
+// i != j ---> let lo,hi = minmax(rank[i], rank[j]); RMQ(lcp[lo+1..hi]).
+
