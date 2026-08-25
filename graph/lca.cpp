@@ -1,7 +1,4 @@
-#include <bits/stdc++.h>
-
-const int LOG {20};
-const int INF {1'000'000'000};
+const int LOG {20}, INF {1'000'000'000};
 
 std::vector<int> depth(n, INF);
 depth[0] = 0;

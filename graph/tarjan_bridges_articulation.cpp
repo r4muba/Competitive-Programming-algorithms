@@ -1,4 +1,3 @@
-#include <bits/stdc++.h>
 int n{}, m{};
 
 // Undirected edges {vertex, id}
