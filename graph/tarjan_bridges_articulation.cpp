@@ -1,5 +1,3 @@
-int n{}, m{};
-
 // Undirected edges {vertex, id}
 std::vector<std::vector<std::pair<int,int>>> adj(n);
 
