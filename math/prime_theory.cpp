@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-
 std::vector<long long> primes{};
 const int nax {100'000};
 
@@ -10,7 +8,6 @@ const auto gc = []() {
 
     for (int m{4}; m <= nax; m += 2) c[m] = true;
     primes.push_back(2);
-
     for (long long p{3}; p <= nax; p += 2) {
         if (c[p]) continue;
         primes.push_back(p);
@@ -20,7 +17,6 @@ const auto gc = []() {
     }
     return c;
 }();
-
 bool isPrime(long long m) {
     if (m <= nax) return !gc[m];
     for (auto p : primes) {
@@ -29,7 +25,6 @@ bool isPrime(long long m) {
     }
     return true;
 }
-
 auto primeFactors(long long m) {
     std::vector<std::pair<long long,int>> f{};
     for (auto p : primes) {
@@ -44,7 +39,6 @@ auto primeFactors(long long m) {
     if (m != 1) f.emplace_back(m, 1);
     return f;
 }
-
 auto eulerPhiSieve = []() {
     std::array <long long, nax + 1> a{};
     std::iota(a.begin(), a.end(), 0);
@@ -57,7 +51,6 @@ auto eulerPhiSieve = []() {
     }
     return a;
 }();
-
 auto eulerPhi(long long n) {
     if (n <= nax) return eulerPhiSieve[n];
     long long ans{n};

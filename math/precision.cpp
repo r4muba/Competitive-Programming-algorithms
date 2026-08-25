@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-
 constexpr double eps {1e-9};
 
 bool equal(double a, double b) {

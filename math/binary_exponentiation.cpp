@@ -11,4 +11,3 @@ auto power (long long a, long long exp) {
     }
     return r;
 }
-

@@ -4,7 +4,7 @@ long long power(long long a, long long exp);
 auto toMod(long long x) {
     return ((x % mod) + mod) % mod;
 }
-auto sum(long long a, long long b) {
+auto add(long long a, long long b) {
     auto ans {a + b};
     return (ans >= mod) ? ans - mod : ans;
 }

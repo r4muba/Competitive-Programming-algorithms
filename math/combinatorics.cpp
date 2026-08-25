@@ -1,10 +1,3 @@
-#include <bits/stdc++.h>
-
-long long power(long long a, long long b);
-long long multi(long long a, long long b);
-long long divide(long long a, long long b);
-
-
 const int nax {67};
 auto pascal = []() {
     std::array< std::array<long long, nax>, nax> p{};

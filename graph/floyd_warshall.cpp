@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-
 const int nax {500};
 std::array< std::array<int, nax>, nax> dis{}, p{};
 

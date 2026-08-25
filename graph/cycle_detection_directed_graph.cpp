@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-
 enum Colors {none, explored, visited};
 std::vector<int> vis(n);
 auto hasCycle = [&](auto& self, int node) -> bool {
@@ -13,6 +11,7 @@ auto hasCycle = [&](auto& self, int node) -> bool {
     return false;
 };
 
+// kanh algorithm
 std::vector<int> q{};
 q.reserve(n);
 for (int i{}; i < n; ++i) {

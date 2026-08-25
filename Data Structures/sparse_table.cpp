@@ -1,12 +1,11 @@
 class SparseTable {
 public:
     SparseTable(const std::vector<int>& b) 
-        : n {static_cast<int>(b.size())}, m{1}, lg(n + 1) {
+        : n {static_cast<int>(b.size())}, lg(n + 1) {
         for (int i{2}; i <= n; ++i) lg[i] = lg[i / 2] + 1;
         m = lg[n] + 1;
-
+        
         a.resize(m * n);
-       
         for (int i{}; i < n; ++i) v(i, 0) = b[i];
 
         for (int j{1}; j < m; ++j) {

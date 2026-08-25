@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-
 dis[start] = 0;
 for (int i{}; i < n - 1; ++i) {
     for (int node{}; node < n; ++node) {

@@ -1,7 +1,7 @@
 //TODO:
-//add Longest Common Substring of k strings
+// Review the kth substring, cses problem
 
-// Push back a sentinel static_cast<char>(1);
+// Push back a sentinel {static_cast<char>(1)} to the string before SuffixArray
 class SuffixArray {
 public:
     SuffixArray (std::string_view a)
@@ -74,9 +74,7 @@ private:
 };
 
 // Longest-Repeated-Substring O(N)
-// Finds the longest substring of s that occurs at least twice.
 // Returns {length, start_index} of one occurrence (lexicographically smallest).
-// If no substring repeats returns {-1, -1}.
 std::pair<int,int> lrs (SuffixArray& sa) {
     const auto& lcp {sa.get_lcp()};
     const auto& suffix {sa.get_suffix()};
@@ -98,24 +96,23 @@ std::pair<int,int> lrso(SuffixArray& sa) {
     const auto& lcp{sa.get_lcp()};
     int m{std::ssize(lcp)};
 
-    int L{};
-    for (int x : lcp) L = std::max(L, x);
-    if (L == 0) return {0, 1}; 
+    int len{};
+    for (int x : lcp) len = std::max(len, x);
+    if (len == 0) return {0, 1}; 
 
-    int best_occurrences{1}, run{};
+    int ans{1}, run{};
     for (int i{}; i < m; ++i) {
-        if (lcp[i] >= L) {
+        if (lcp[i] >= len) {
             ++run;
-            best_occurrences = std::max(best_occurrences, run + 1);
+            ans = std::max(ans, run + 1);
         } else {
             run = 0;
         }
     }
-    return {L, best_occurrences};
+    return {len, ans};
 }
 
 // Count-Distinct-Substrings O(N)
-// counts the total number of distinct substrings of s
 long long cds (SuffixArray& sa) {
     long long n{sa.size() - 1}, ans {(n * (n + 1)) / 2};
     for (auto u : sa.get_lcp()) ans -= u;
@@ -123,7 +120,6 @@ long long cds (SuffixArray& sa) {
 }
 
 // Count-Distinct-Substrings-Repetead-At-Least-K O(N)
-// Counts the number of distinct substrings of s that occur at least k times.
 long long cdrk (SuffixArray& sa, int k) {
     const auto& lcp{sa.get_lcp()};
     int n {std::ssize(lcp)};
@@ -161,7 +157,6 @@ std::string kthSubstring(long long k, SuffixArray& sa, const std::string& s) {
 }
 
 // Longest-Repetead-Substring-At-Least-K O(N)
-// Finds the longestsubstring that occurs at least k time to also recover a start index.
 // Returns {length, start_index} of one valid occurrence — specifically
 // the occurrence with the largest/smallest starting index among all substrings
 std::pair<int,int> lrsk(SuffixArray& a, int k) {
@@ -198,9 +193,7 @@ std::pair<int,int> lrsk(SuffixArray& a, int k) {
     return {best, idx};
 }
 
-// Longest-Repetead-Substring-By_Lenght O(N)
-// For EVERY length L (1..n) the maximum number of times
-// any substring of exact length L occurs in s.
+// Longest-Repetead-Substring-By-Lenght O(N)
 // Returns a vector of size n+1; index L (1..n) holds max occurrences of
 // length-L substrings. 
 std::vector<int> lrbl(SuffixArray& sa) {
@@ -239,7 +232,6 @@ std::vector<int> lrbl(SuffixArray& sa) {
 // i == j ---> n - i (whole suffix, no RMQ).
 // i != j ---> let lo,hi = minmax(rank[i], rank[j]); RMQ(lcp[lo+1..hi]).
 
-
 // Helper function to concatend strings for lcks
 // preprocess the suffix_belongs
 // Return string, ready to SuffixArray
@@ -268,8 +260,8 @@ std::vector<int> concatenated_strings (std::vector<std::string>& s) {
 // Finding the longest common substring that appears in at least K 
 // different strings out of a given collection of strings.
 // Return the max {length, vector<>{index}}
-// Most of the time should work with integers and offsetthem to a wider range
-// 1->(k + 1) sentinel char, A = (k + 1) -> Z = (k + 1 + 'a')
+// Most of the time should work with integers and offset them to a wider range
+// 1->(k + 1) sentinel char, A = (k + 1) -> Z = (k + 1 + 'A')
 std::pair<int, std::vector<int>> lcsk (SuffixArray& sa, int k) {
     int n {sa.size()};
     const auto& lcp {sa.get_lcp()};
