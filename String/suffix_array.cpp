@@ -1,6 +1,3 @@
-//TODO:
-// Review the kth substring, cses problem
-
 // Push back a sentinel {static_cast<char>(1)} to the string before SuffixArray
 class SuffixArray {
 public:
@@ -145,15 +142,19 @@ long long cdrk (SuffixArray& sa, int k) {
     return ans;
 }
 
-std::string kthSubstring(long long k, SuffixArray& sa, const std::string& s) {
+std::string kth_distinct_substring(SuffixArray& sa, const std::string& s, long long k) {
     const auto& suf = sa.get_suffix();
     const auto& lcp = sa.get_lcp();
+    const int n = std::ssize(s) - 1;   
+
     for (int i{}; i < std::ssize(suf); ++i) {
-        long long newCount = (std::ssize(s) - suf[i]) - (i == 0 ? 0 : lcp[i]);
-        if (k <= newCount) return s.substr(suf[i], lcp[i] + k);
-        k -= newCount;
+        long long prev = (i == 0) ? 0 : lcp[i];
+        long long m = (n - suf[i]) - prev;
+        if (m <= 0) continue; 
+        if (k <= m) return s.substr(suf[i], prev + k);
+        k -= m;
     }
-    return ""; 
+    return "";
 }
 
 // Longest-Repetead-Substring-At-Least-K O(N)
