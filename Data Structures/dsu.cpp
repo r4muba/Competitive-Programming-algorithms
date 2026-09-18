@@ -1,7 +1,7 @@
 class UF {
 public:
-    UF (int size) 
-        : n{size}, c{n}, p(n), sz(n, 1) {
+    UF (int n) 
+        : c{n}, p(n), sz(n, 1) {
             std::iota(p.begin(), p.end(), 0);
         }
     int find (int i) {
@@ -20,9 +20,9 @@ public:
         --c;
         return true;
     }
-    int size(int i) { return sz[find(i)]; }
+    int operator[](int i) { return sz[find(i)]; }
     int components() { return c; }
 private:
-    int n{}, c{};
+    int c{};
     std::vector<int> p{}, sz{};
 };
