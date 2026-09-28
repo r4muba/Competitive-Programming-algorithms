@@ -5,7 +5,7 @@ public:
         for (int i{2}; i <= n; ++i) lg[i] = lg[i / 2] + 1;
         m = lg[n] + 1;
         
-        a.resize(m * n);
+        mat.resize(m * n);
         for (int i{}; i < n; ++i) v(i, 0) = b[i];
 
         for (int j{1}; j < m; ++j) {
@@ -21,6 +21,6 @@ public:
     }
 private:
     int n{}, m{};
-    std::vector<int> a{}, lg{};
-    int& v(int i, int j) { return a[(j * n) + i]; }
+    std::vector<int> mat{}, lg{};
+    int& v(int i, int j) { return mat[(j * n) + i]; }
 };

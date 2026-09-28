@@ -4,13 +4,12 @@ public:
         : c{n}, p(n), sz(n, 1) {
             std::iota(p.begin(), p.end(), 0);
         }
+
     int find (int i) {
         while (p[i] != i) i = p[i] = p[p[i]];
         return i;
     }
-    bool same(int i, int j) { 
-        return find(i) == find(j); 
-    }
+
     bool unite(int i, int j) {
         i = find(i); j = find(j);
         if (i == j) return false;
@@ -20,8 +19,10 @@ public:
         --c;
         return true;
     }
+    
     int operator[](int i) { return sz[find(i)]; }
     int components() { return c; }
+    bool same (int i, int j) { return find(i) == find(j); }
 private:
     int c{};
     std::vector<int> p{}, sz{};
