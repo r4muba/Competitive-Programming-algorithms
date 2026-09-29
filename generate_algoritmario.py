@@ -164,9 +164,9 @@ CPP_KEYWORDS = {
     "virtual", "void", "volatile", "wchar_t", "while", "xor", "xor_eq",
 }
 CPP_COMMON_TYPES = {
-    "array", "deque", "function", "ll", "map", "multimap", "multiset", "pair",
-    "priority_queue", "queue", "set", "stack", "string", "unordered_map",
-    "unordered_set", "vector",
+    "array", "bitset", "deque", "function", "ll", "map", "multimap", "multiset", "optional", "pair",
+    "priority_queue", "queue", "ranges", "set", "stack", "std", "string", "string_view", "unordered_map",
+    "unordered_set", "tuple", "greater", "vector", "views",
 }
 
 
