@@ -6,13 +6,13 @@ int root{}, childrenRoot{};
 
 std::vector<int> pre(n), low(n);
 int cont{};
-auto dfs = [&](auto& self, int node, int parentEdge) -> void {
+auto ldfs = [&](auto& dfs, int node, int parentEdge) -> void {
     pre[node] = low[node] = ++cont;
     for (auto [u, id] : adj[node]) {
         if (id == parentEdge) continue;
         if (pre[u] == 0) {
-            // forward/tree edge
-            self(self, u, id);
+            // forward / tree edge
+            dfs(dfs, u, id);
             if (node == root) ++childrenRoot;
             if (low[u] > pre[node]) bridges[id] = true;
             if (low[u] >= pre[node]) articulation[node] = true;

@@ -1,4 +1,3 @@
-const long long INF = 5e18;
 std::vector<int> dis(n, INF);
 
 using T = std::pair<long long, int>;
@@ -7,7 +6,7 @@ std::priority_queue<T, std::vector<T>, std::greater<T>> pq{};
 dis[start] = 0;
 pq.emplace(dis[start], start);
 
-std::vector<std::vector<std::pair<int,int>>> path(n);
+std::vector< std::vector< std::pair<int,int>>> path(n);
 
 while (!pq.empty()) {
     auto [cost, node] {pq.top()}; pq.pop();
