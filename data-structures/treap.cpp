@@ -62,3 +62,16 @@ std::pair<Node*, Node*> cut(Node* node, int k) {
 		return {other, node};
 	}
 }
+
+/*
+int l{}, r{};
+
+auto [u, v] {cut(tree, r)};
+auto [x, y] {cut(u, l - 1)};
+
+// [    u  	 ] [ v ]
+// [ x ] [ y ] [ v ]
+//		   ^
+
+tree = merge(x, (merge(y, v)));
+*/
